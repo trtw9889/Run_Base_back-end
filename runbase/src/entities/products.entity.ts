@@ -1,7 +1,6 @@
 import {
   BaseEntity,
   Entity,
-  Unique,
   PrimaryGeneratedColumn,
   Column,
   ManyToOne,
@@ -15,7 +14,6 @@ import { ProductSize } from './product_sizes.entity';
 import { ProductReview } from './product_reviews.entity';
 
 @Entity({ name: 'products' })
-@Unique(['name'])
 export class Product extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;

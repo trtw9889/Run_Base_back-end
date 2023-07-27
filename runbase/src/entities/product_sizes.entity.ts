@@ -25,9 +25,6 @@ export class ProductSize extends BaseEntity {
   @Column({ type: 'int', nullable: false })
   size_id: number;
 
-  @Column({ type: 'text', nullable: false })
-  url: string;
-
   @ManyToOne(() => Product, (products) => products.product_sizes)
   @JoinColumn({ name: 'product_id' })
   products: Product;
