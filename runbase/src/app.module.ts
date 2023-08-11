@@ -7,6 +7,7 @@ import { UsersModule } from './users/users.module';
 import { ConfigModule } from '@nestjs/config';
 import { ReviewsModule } from './reviews/reviews.module';
 import authConfig from './configs/authConfig';
+import { ProductsModule } from './products/products.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import authConfig from './configs/authConfig';
     UsersModule,
     ConfigModule.forRoot({ load: [authConfig], isGlobal: true }),
     ReviewsModule,
+    ProductsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

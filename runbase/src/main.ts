@@ -4,6 +4,7 @@ import { AppModule } from './app.module';
 import * as config from 'config';
 import { GlobalExceptionFilter } from './utils/global-exception.filter';
 import { ValidationExceptionFilter } from './utils/validation-exception.filter';
+import { HttpExceptionFilter } from './utils/http-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -21,6 +22,7 @@ async function bootstrap() {
 
   // app.useGlobalFilters(new ValidationExceptionFilter());
   // app.useGlobalFilters(new GlobalExceptionFilter());
+  app.useGlobalFilters(new HttpExceptionFilter());
 
   await app.listen(port);
   Logger.log(`Application running on port ${port}!`);
