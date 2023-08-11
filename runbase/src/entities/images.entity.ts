@@ -14,10 +14,10 @@ export class Image extends BaseEntity {
   id: number;
 
   @Column({ type: 'varchar', length: 400, nullable: false })
-  serial_number: string;
+  serialNumber: string;
 
   @Column({ type: 'int', nullable: false })
-  color_id: number;
+  colorId: number;
 
   @Column({ type: 'text', nullable: false })
   url: string;

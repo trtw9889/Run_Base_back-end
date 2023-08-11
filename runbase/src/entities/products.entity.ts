@@ -25,30 +25,30 @@ export class Product extends BaseEntity {
   price: number;
 
   @Column({ type: 'int', nullable: true })
-  gender_id: number;
+  genderId: number;
 
   @Column({ type: 'int', nullable: false })
-  category_id: number;
+  categoryId: number;
 
   @Column({ type: 'varchar', length: 400, nullable: false })
-  serial_number: string;
+  serialNumber: string;
 
   @Column({ type: 'int', nullable: false })
-  color_id: number;
+  colorId: number;
 
   @Column({
     type: 'timestamp',
     default: () => 'CURRENT_TIMESTAMP',
     nullable: false,
   })
-  created_at: Date;
+  createdAt: Date;
 
   @Column({
     type: 'timestamp',
     onUpdate: 'CURRENT_TIMESTAMP',
     nullable: true,
   })
-  updated_at: Date;
+  updatedAt: Date;
 
   @ManyToOne(() => Gender, (genders) => genders.products)
   @JoinColumn({ name: 'gender_id' })
@@ -62,9 +62,9 @@ export class Product extends BaseEntity {
   @JoinColumn({ name: 'color_id' })
   colors: Color;
 
-  @OneToMany(() => ProductSize, (product_sizes) => product_sizes.products)
-  product_sizes: ProductSize[];
+  @OneToMany(() => ProductSize, (productSizes) => productSizes.products)
+  productSizes: ProductSize[];
 
-  @OneToMany(() => ProductReview, (product_reviews) => product_reviews.products)
-  product_reviews: ProductReview[];
+  @OneToMany(() => ProductReview, (productReviews) => productReviews.products)
+  productReviews: ProductReview[];
 }

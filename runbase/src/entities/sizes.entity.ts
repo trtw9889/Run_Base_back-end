@@ -15,6 +15,6 @@ export class Size extends BaseEntity {
   @Column({ type: 'varchar', length: 100, nullable: false })
   name: string;
 
-  @OneToMany(() => ProductSize, (product_sizes) => product_sizes.sizes)
-  product_sizes: ProductSize[];
+  @OneToMany(() => ProductSize, (productSizes) => productSizes.sizes)
+  productSizes: ProductSize[];
 }

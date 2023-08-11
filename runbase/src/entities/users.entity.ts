@@ -13,7 +13,7 @@ import { Cart } from './carts.entity';
 
 @Entity({ name: 'users' })
 @Unique(['email'])
-@Unique(['phone_number'])
+@Unique(['phoneNumber'])
 export class User extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
@@ -28,24 +28,24 @@ export class User extends BaseEntity {
   password: string;
 
   @Column({ type: 'varchar', length: 200, nullable: false })
-  phone_number: number;
+  phoneNumber: number;
 
   @Column({
     type: 'timestamp',
     default: () => 'CURRENT_TIMESTAMP',
     nullable: false,
   })
-  created_at: Date;
+  createdAt: Date;
 
   @Column({
     type: 'timestamp',
     onUpdate: 'CURRENT_TIMESTAMP',
     nullable: true,
   })
-  updated_at: Date;
+  updatedAt: Date;
 
-  @OneToMany(() => ProductReview, (product_reviews) => product_reviews.users)
-  product_reviews: ProductReview[];
+  @OneToMany(() => ProductReview, (productReviews) => productReviews.users)
+  productReviews: ProductReview[];
 
   @OneToMany(() => Shipment, (shipments) => shipments.users)
   shipments: Shipment[];

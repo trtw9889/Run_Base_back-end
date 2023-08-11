@@ -17,47 +17,47 @@ export class OrderProduct extends BaseEntity {
   id: number;
 
   @Column({ type: 'int' })
-  product_size_id: number;
+  productSizeId: number;
 
   @Column({ type: 'int' })
-  cart_id: number;
+  cartId: number;
 
   @Column({ type: 'int', nullable: false })
-  product_quantity: number;
+  productQuantity: number;
 
   @Column({ type: 'int' })
-  order_id: number;
+  orderId: number;
 
   @Column({ type: 'int' })
-  order_status_id: number;
+  orderStatusId: number;
 
   @Column({
     type: 'timestamp',
     default: () => 'CURRENT_TIMESTAMP',
     nullable: false,
   })
-  created_at: Date;
+  createdAt: Date;
 
   @Column({
     type: 'timestamp',
     onUpdate: 'CURRENT_TIMESTAMP',
     nullable: true,
   })
-  updated_at: Date;
+  updatedAt: Date;
 
-  @ManyToOne(() => ProductSize, (product_sizes) => product_sizes.order_products)
+  @ManyToOne(() => ProductSize, (productSizes) => productSizes.orderProducts)
   @JoinColumn({ name: 'product_size_id' })
-  product_sizes: ProductSize;
+  productSizes: ProductSize;
 
-  @ManyToOne(() => Cart, (carts) => carts.order_products)
+  @ManyToOne(() => Cart, (carts) => carts.orderProducts)
   @JoinColumn({ name: 'cart_id' })
   carts: Cart;
 
-  @ManyToOne(() => Order, (orders) => orders.order_products)
+  @ManyToOne(() => Order, (orders) => orders.orderProducts)
   @JoinColumn({ name: 'order_id' })
   orders: Order;
 
-  @ManyToOne(() => OrderStatus, (order_status) => order_status.order_products)
+  @ManyToOne(() => OrderStatus, (orderStatus) => orderStatus.orderProducts)
   @JoinColumn({ name: 'order_status_id' })
-  order_status: OrderStatus;
+  orderStatus: OrderStatus;
 }

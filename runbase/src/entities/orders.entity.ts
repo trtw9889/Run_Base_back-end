@@ -13,36 +13,36 @@ import { Shipment } from './shipment.entity';
 import { OrderProduct } from './order_products.entity';
 
 @Entity({ name: 'orders' })
-@Unique(['order_number'])
+@Unique(['orderNumber'])
 export class Order extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
   @Column({ type: 'int', nullable: false })
-  user_id: number;
+  userId: number;
 
   @Column({ type: 'int', nullable: false })
-  shipment_id: number;
+  shipmentId: number;
 
   @Column({ type: 'decimal', precision: 11, scale: 3, nullable: false })
-  total_price: number;
+  totalPrice: number;
 
   @Column({ type: 'varchar', length: 200, nullable: false })
-  order_number: string;
+  orderNumber: string;
 
   @Column({
     type: 'timestamp',
     default: () => 'CURRENT_TIMESTAMP',
     nullable: false,
   })
-  created_at: Date;
+  createdAt: Date;
 
   @Column({
     type: 'timestamp',
     onUpdate: 'CURRENT_TIMESTAMP',
     nullable: true,
   })
-  updated_at: Date;
+  updatedAt: Date;
 
   @ManyToOne(() => User, (users) => users.orders)
   @JoinColumn({ name: 'user_id' })
@@ -52,6 +52,6 @@ export class Order extends BaseEntity {
   @JoinColumn({ name: 'shipment_id' })
   shipments: Shipment;
 
-  @OneToMany(() => OrderProduct, (order_products) => order_products.orders)
-  order_products: OrderProduct[];
+  @OneToMany(() => OrderProduct, (orderProducts) => orderProducts.orders)
+  orderProducts: OrderProduct[];
 }

@@ -16,13 +16,13 @@ export class Shipment extends BaseEntity {
   id: number;
 
   @Column({ type: 'int', nullable: false })
-  user_id: number;
+  userId: number;
 
   @Column({ type: 'varchar', length: 100, nullable: false })
   receiver: string;
 
   @Column({ type: 'boolean', nullable: true, default: false })
-  is_main_address: boolean;
+  isMainAddress: boolean;
 
   @Column({ type: 'boolean', nullable: false, default: false })
   storage: boolean;
@@ -31,30 +31,30 @@ export class Shipment extends BaseEntity {
   nickname: string;
 
   @Column({ type: 'varchar', length: 200, nullable: false })
-  street_address: string;
+  streetAddress: string;
 
   @Column({ type: 'varchar', length: 200, nullable: false })
-  detail_address: string;
+  detailAddress: string;
 
   @Column({ type: 'varchar', length: 100, nullable: false })
   zipcode: string;
 
   @Column({ type: 'varchar', length: 100, nullable: false })
-  phone_number: number;
+  phoneNumber: number;
 
   @Column({
     type: 'timestamp',
     default: () => 'CURRENT_TIMESTAMP',
     nullable: false,
   })
-  created_at: Date;
+  createdAt: Date;
 
   @Column({
     type: 'timestamp',
     onUpdate: 'CURRENT_TIMESTAMP',
     nullable: true,
   })
-  updated_at: Date;
+  updatedAt: Date;
 
   @ManyToOne(() => User, (users) => users.shipments)
   @JoinColumn({ name: 'user_id' })

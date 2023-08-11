@@ -17,9 +17,6 @@ export class OrderStatus extends BaseEntity {
   @Column({ type: 'varchar', length: 100, nullable: false })
   name: string;
 
-  @OneToMany(
-    () => OrderProduct,
-    (order_products) => order_products.order_status,
-  )
-  order_products: OrderProduct[];
+  @OneToMany(() => OrderProduct, (orderProducts) => orderProducts.orderStatus)
+  orderProducts: OrderProduct[];
 }

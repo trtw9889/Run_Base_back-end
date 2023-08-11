@@ -15,10 +15,10 @@ export class ProductReview extends BaseEntity {
   id: number;
 
   @Column({ type: 'int', nullable: false })
-  product_id: number;
+  productId: number;
 
   @Column({ type: 'int', nullable: false })
-  user_id: number;
+  userId: number;
 
   @Column({ type: 'varchar', length: 1000, nullable: false })
   comment: string;
@@ -31,20 +31,20 @@ export class ProductReview extends BaseEntity {
     default: () => 'CURRENT_TIMESTAMP',
     nullable: false,
   })
-  created_at: Date;
+  createdAt: Date;
 
   @Column({
     type: 'timestamp',
     onUpdate: 'CURRENT_TIMESTAMP',
     nullable: true,
   })
-  updated_at: Date;
+  updatedAt: Date;
 
-  @ManyToOne(() => Product, (products) => products.product_reviews)
+  @ManyToOne(() => Product, (products) => products.productReviews)
   @JoinColumn({ name: 'product_id' })
   products: Product;
 
-  @ManyToOne(() => User, (users) => users.product_reviews)
+  @ManyToOne(() => User, (users) => users.productReviews)
   @JoinColumn({ name: 'user_id' })
   users: User;
 }
