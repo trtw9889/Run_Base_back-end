@@ -4,9 +4,15 @@ import { typeORMConfig } from './configs/typeorm.config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
+import { ConfigModule } from '@nestjs/config';
+import authConfig from './configs/authConfig';
 
 @Module({
-  imports: [TypeOrmModule.forRoot(typeORMConfig), UsersModule],
+  imports: [
+    TypeOrmModule.forRoot(typeORMConfig),
+    UsersModule,
+    ConfigModule.forRoot({ load: [authConfig], isGlobal: true }),
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
