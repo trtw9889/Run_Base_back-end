@@ -3,6 +3,7 @@ import * as config from 'config';
 import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 
 const dbConfig = config.get('db');
+
 export const typeORMConfig: TypeOrmModuleOptions = {
   type: dbConfig.type,
   host: dbConfig.host,

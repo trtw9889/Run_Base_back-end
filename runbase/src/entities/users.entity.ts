@@ -28,7 +28,7 @@ export class User extends BaseEntity {
   password: string;
 
   @Column({ type: 'varchar', length: 200, nullable: false })
-  phoneNumber: number;
+  phoneNumber: string;
 
   @Column({
     type: 'timestamp',
