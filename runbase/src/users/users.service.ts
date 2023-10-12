@@ -44,6 +44,8 @@ export class UsersService {
     user.phoneNumber = phoneNumber;
 
     await this.userRepository.save(user);
+
+    return { message: '회원가입이 완료되었습니다.' };
   }
 
   async signIn(signInData: SignInUserDto) {
@@ -70,5 +72,17 @@ export class UsersService {
       id: user.id,
       email: user.email,
     });
+  }
+
+  async checkEmail(email: string) {
+    const isDuplicate = await this.userRepository.findOne({
+      where: { email },
+    });
+
+    if (isDuplicate !== null) {
+      throw new HttpException('이미 가입된 이메일입니다.', HttpStatus.CONFLICT);
+    }
+
+    return { message: '가입 가능한 이메일입니다.' };
   }
 }
