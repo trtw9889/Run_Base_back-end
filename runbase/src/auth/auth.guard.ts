@@ -1,6 +1,10 @@
-import { Request } from 'express';
 import { Observable } from 'rxjs';
-import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import {
+  CanActivate,
+  ExecutionContext,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 
 @Injectable()
@@ -11,14 +15,23 @@ export class AuthGuard implements CanActivate {
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
     const request = context.switchToHttp().getRequest();
-    return this.validateRequest(request);
-  }
-
-  private validateRequest(request: Request) {
     const jwtString = request.headers.authorization.split('Bearer ')[1];
 
-    this.authService.verify(jwtString);
+    if (!jwtString) {
+      throw new UnauthorizedException('Access token not provided');
+    }
 
-    return true;
+    try {
+      const user = this.authService.verify(jwtString);
+      if (!user) {
+        throw new UnauthorizedException('Invalid access token');
+      }
+
+      request.user = user;
+
+      return true;
+    } catch (error) {
+      throw new UnauthorizedException('Invalid access token');
+    }
   }
 }
