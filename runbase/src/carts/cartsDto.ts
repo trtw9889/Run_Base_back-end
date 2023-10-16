@@ -7,14 +7,3 @@ export class AddCartsDto {
   @IsNumber()
   sizeId: number;
 }
-
-export class GetCartsDto {
-  userId: number;
-  productSizeId: number;
-  quantity: number;
-  productId: number;
-  productName: string;
-  productPrice: number;
-  productColor: string;
-  imageUrl: string;
-}
