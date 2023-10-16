@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { Cart } from 'src/entities/carts.entity';
 import { ProductSize } from 'src/entities/product_sizes.entity';
 import { Product } from 'src/entities/products.entity';
@@ -12,7 +12,7 @@ import { Category } from 'src/entities/categories.entity';
 import { Size } from 'src/entities/sizes.entity';
 import { Color } from 'src/entities/colors.entity';
 import { Image } from 'src/entities/images.entity';
-import { AddCartsDto, GetCartsDto } from './cartsDto';
+import { AddCartsDto } from './cartsDto';
 
 @Injectable()
 export class CartsService {
@@ -92,7 +92,7 @@ export class CartsService {
       .getMany();
   }
 
-  async findCartsByUserId(userId: number): Promise<GetCartsDto[]> {
+  async findCartsByUserId(userId: number) {
     try {
       const carts = await this.getCartsData(userId);
 
@@ -103,6 +103,11 @@ export class CartsService {
       const productIds = productSizes.map(
         (productSize) => productSize.productId,
       );
+      const sizeIds = productSizes.map((productSize) => productSize.sizeId);
+
+      const productSizeName = await this.sizesRepository.find({
+        where: { id: In(sizeIds) },
+      });
 
       const products = await this.getProducts(productIds);
 
@@ -119,11 +124,19 @@ export class CartsService {
           (ps) => ps.id === cart.productSizeId,
         );
 
-        const product = products.find((p) => p.id === productSize.productId);
+        const SizeName = productSizeName.find(
+          (productsize) => productsize.id === productSize.sizeId,
+        );
 
-        const color = colors.find((c) => c.id === product.colorId);
+        const product = products.find(
+          (product) => product.id === productSize.productId,
+        );
 
-        const image = images.find((i) => i.colorId === color.id);
+        const productPrice = product.price * cart.quantity;
+
+        const color = colors.find((color) => color.id === product.colorId);
+
+        const image = images.find((image) => image.colorId === color.id);
 
         return {
           userId,
@@ -132,14 +145,18 @@ export class CartsService {
           quantity: cart.quantity,
           productId: product.id,
           productName: product.name,
-          productPrice: product.price,
+          productSize: SizeName.name,
+          productPrice: productPrice,
           productColor: color.name,
           imageUrl: image.url,
         };
       });
-      return combinedData;
+      const totalPrice = combinedData
+        .map((product) => product.productPrice)
+        .reduce((acc, cur) => acc + cur, 0);
+      return [...combinedData, { totalPrice: totalPrice }];
     } catch (error) {
-      throw new NotFoundException(error.message);
+      throw new NotFoundException(`장바구니가 비어 있습니다.`);
     }
   }
 
@@ -151,17 +168,21 @@ export class CartsService {
         where: { productId, sizeId },
       });
 
-      // 이미 카트에 해당 제품이 존재하는지 확인
+      // 이미 장바구니에 해당 제품이 존재하는지 확인
       const existingCartItem = await this.cartsRepository.findOne({
         where: { productSizeId: productSize.id },
       });
 
       if (existingCartItem) {
-        // 이미 존재하는 카트 아이템인 경우 수량을 증가
+        if (existingCartItem.quantity >= 5) {
+          // 이미 quantity가 5 이상일 때 증가 불가
+          throw new BadRequestException('수량은 5개까지만 가능합니다.');
+        }
+        // 이미 존재하는 장바구니 아이템인 경우 수량을 하나 증가
         existingCartItem.quantity += 1;
         await this.cartsRepository.save(existingCartItem);
       } else {
-        // 카트에 아이템을 추가합니다.
+        // 장바구니에 아이템을 추가합니다.
         const newCartItem = new Cart();
         newCartItem.userId = userId;
         newCartItem.productSizeId = productSize.id;
@@ -170,7 +191,7 @@ export class CartsService {
       }
     } catch (error) {
       console.error(error);
-      throw new NotFoundException(error.message);
+      throw new NotFoundException('예외 에러메세지 출력');
     }
   }
 
@@ -179,10 +200,10 @@ export class CartsService {
     id: number,
     quantity: number,
   ): Promise<Cart> {
-    //수량은 1~10개로 제한
-    if (quantity < 1 || quantity > 10) {
+    //수량은 1~5개로 제한
+    if (quantity < 1 || quantity > 5) {
       //Bad Request" (HTTP 상태 코드 400) 오류를 반환
-      throw new BadRequestException('수량이 1과 10 사이의 값이어야 합니다.');
+      throw new BadRequestException('수량이 1과 5 사이의 값이어야 합니다.');
     }
 
     const cartItem = await this.cartsRepository.findOne({
@@ -195,6 +216,7 @@ export class CartsService {
     }
 
     cartItem.quantity = quantity;
+
     return await this.cartsRepository.save(cartItem);
   }
 
@@ -209,6 +231,6 @@ export class CartsService {
       );
     }
 
-    return await this.cartsRepository.delete({ id });
+    await this.cartsRepository.delete({ id });
   }
 }
