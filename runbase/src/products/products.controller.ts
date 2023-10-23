@@ -68,8 +68,8 @@ export class ProductsController {
       perPage,
       sorting,
       colors,
-      minPrice !== '' ? minPrice : null,
-      maxPrice !== '' ? maxPrice : null,
+      minPrice ? minPrice : null,
+      maxPrice ? maxPrice : null,
       sizes,
       gender,
     );

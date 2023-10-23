@@ -20,8 +20,8 @@ async function bootstrap() {
   const serverConfig = config.get('server');
   const port = serverConfig.port;
 
-  // app.useGlobalFilters(new ValidationExceptionFilter());
-  // app.useGlobalFilters(new GlobalExceptionFilter());
+  app.useGlobalFilters(new ValidationExceptionFilter());
+  app.useGlobalFilters(new GlobalExceptionFilter());
   app.useGlobalFilters(new HttpExceptionFilter());
 
   await app.listen(port);
