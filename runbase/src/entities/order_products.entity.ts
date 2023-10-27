@@ -19,8 +19,8 @@ export class OrderProduct extends BaseEntity {
   @Column({ type: 'int' })
   productSizeId: number;
 
-  @Column({ type: 'int' })
-  cartId: number;
+  // @Column({ type: 'int' })
+  // cartId: number;
 
   @Column({ type: 'int', nullable: false })
   productQuantity: number;
@@ -49,9 +49,9 @@ export class OrderProduct extends BaseEntity {
   @JoinColumn({ name: 'product_size_id' })
   productSizes: ProductSize;
 
-  @ManyToOne(() => Cart, (carts) => carts.orderProducts)
-  @JoinColumn({ name: 'cart_id' })
-  carts: Cart;
+  // @ManyToOne(() => Cart, (carts) => carts.orderProducts)
+  // @JoinColumn({ name: 'cart_id' })
+  // carts: Cart;
 
   @ManyToOne(() => Order, (orders) => orders.orderProducts)
   @JoinColumn({ name: 'order_id' })
