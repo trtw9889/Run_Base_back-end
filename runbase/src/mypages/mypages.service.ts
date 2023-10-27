@@ -117,7 +117,7 @@ export class MypagesService {
     page: number,
     perPage: number,
   ): Promise<PaymentList[]> {
-    const order = await this.getOrderNumber(userId); //order 정보
+    const order = await this.getOrderNumber(userId);
 
     const orderProducts = await this.getOrderProduct(userId); //orderProduct 가지고 오는 로직
 
