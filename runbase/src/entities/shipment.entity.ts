@@ -40,7 +40,7 @@ export class Shipment extends BaseEntity {
   zipcode: string;
 
   @Column({ type: 'varchar', length: 100, nullable: false })
-  phoneNumber: number;
+  phoneNumber: string;
 
   @Column({
     type: 'timestamp',

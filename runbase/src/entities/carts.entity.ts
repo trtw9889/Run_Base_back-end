@@ -27,8 +27,8 @@ export class Cart extends BaseEntity {
   @Column({ type: 'int', nullable: false })
   quantity: number;
 
-  @OneToMany(() => OrderProduct, (orderProducts) => orderProducts.carts)
-  orderProducts: OrderProduct[];
+  // @OneToMany(() => OrderProduct, (orderProducts) => orderProducts.carts)
+  // orderProducts: OrderProduct[];
 
   @ManyToOne(() => User, (users) => users.carts)
   @JoinColumn({ name: 'user_id' })
