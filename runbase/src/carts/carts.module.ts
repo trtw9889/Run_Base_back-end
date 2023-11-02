@@ -10,6 +10,7 @@ import { Category } from 'src/entities/categories.entity';
 import { Color } from 'src/entities/colors.entity';
 import { Size } from 'src/entities/sizes.entity';
 import { Image } from 'src/entities/images.entity';
+import { Gender } from 'src/entities/genders.entity';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { Image } from 'src/entities/images.entity';
       Cart,
       ProductSize,
       Product,
+      Gender,
       Category,
       Color,
       Size,
@@ -26,5 +28,6 @@ import { Image } from 'src/entities/images.entity';
   ],
   controllers: [CartsController],
   providers: [CartsService],
+  exports: [CartsService],
 })
 export class CartsModule {}

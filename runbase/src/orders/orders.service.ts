@@ -5,6 +5,7 @@ import { Order } from 'src/entities/orders.entity';
 import { OrderProduct } from 'src/entities/order_products.entity';
 import { Shipment } from 'src/entities/shipment.entity';
 import { Repository } from 'typeorm';
+import { CartsService } from 'src/carts/carts.service';
 
 @Injectable()
 export class OrdersService {
@@ -17,6 +18,7 @@ export class OrdersService {
     private shipmentRepository: Repository<Shipment>,
     @InjectRepository(Cart)
     private cartRepository: Repository<Cart>,
+    private cartsService: CartsService,
   ) {}
 
   // DB 자동 변경을 위한 Logger
@@ -96,5 +98,10 @@ export class OrdersService {
     }
 
     return { message: '결제를 완료하였습니다.' };
+  }
+
+  async getOrderInfo(userId: number) {
+    const cartList = await this.cartsService.findCartsByUserId(userId);
+    console.log(cartList);
   }
 }

@@ -15,7 +15,7 @@ import {
   PaymentProductDetail,
   PaymentList,
 } from './interfaces/mypages.interface';
-import { PasswordDto } from './dto/mypages.dto';
+import { InfoDto, PasswordDto } from './dto/mypages.dto';
 
 @Controller('mypages')
 @UseGuards(AuthGuard)
@@ -43,6 +43,13 @@ export class MypagesController {
     return this.mypagesService.getPaymentsDetail(userId, orderId);
   }
 
+  @Get('personalInfo')
+  async getpersonalInfo(@Request() request) {
+    const userId = request.user.id;
+
+    return this.mypagesService.getPersonalInfo(userId);
+  }
+
   @Post('check/password')
   async checkPassword(@Request() request, @Body() checkPassword: PasswordDto) {
     const userId = request.user.id;
@@ -62,5 +69,14 @@ export class MypagesController {
     await this.mypagesService.updatePassword(userId, updatePassword);
 
     return { status: 200, message: '비밀번호가 정상적으로 변경되었습니다.' };
+  }
+
+  @Patch('update/info')
+  async updateInfo(@Request() request, @Body() updateInfo: InfoDto) {
+    const userId = request.user.id;
+
+    await this.mypagesService.updateInfo(userId, updateInfo);
+
+    return { status: 200, message: '개인정보 수정 완료.' };
   }
 }

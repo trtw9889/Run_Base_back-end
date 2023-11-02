@@ -14,7 +14,7 @@ import {
 import { Size } from 'src/entities/sizes.entity';
 import { Color } from 'src/entities/colors.entity';
 import { Shipment } from 'src/entities/shipment.entity';
-import { PasswordDto } from './dto/mypages.dto';
+import { InfoDto, PasswordDto } from './dto/mypages.dto';
 import { AuthService } from 'src/auth/auth.service';
 import { User } from 'src/entities/users.entity';
 
@@ -353,5 +353,26 @@ export class MypagesService {
     user.password = newHashedPassword;
 
     return this.usersRepository.save(user);
+  }
+
+  async getPersonalInfo(userId: number) {
+    const Info = await this.usersRepository.find({
+      where: { id: userId },
+      select: ['name', 'email', 'phoneNumber'],
+    });
+
+    return Info;
+  }
+
+  async updateInfo(userId: number, updateInfo: InfoDto) {
+    const user = await this.usersRepository.findOne({
+      where: { id: userId },
+    });
+
+    user.name = updateInfo.name;
+    user.email = updateInfo.email;
+    user.phoneNumber = updateInfo.phoneNumber;
+
+    this.usersRepository.save(user);
   }
 }
