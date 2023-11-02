@@ -6,11 +6,12 @@ import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { CartsModule } from './carts/carts.module';
 import { ConfigModule } from '@nestjs/config';
-import { ProductsModule } from './products/products.module';
-import { OrdersModule } from './orders/orders.module';
 import { ReviewsModule } from './reviews/reviews.module';
-import { MypagesModule } from './mypages/mypages.module';
 import authConfig from './configs/authConfig';
+import { ProductsModule } from './products/products.module';
+import { ShipmentsModule } from './shipments/shipments.module';
+import { OrdersModule } from './orders/orders.module';
+import { MypagesModule } from './mypages/mypages.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import authConfig from './configs/authConfig';
     ConfigModule.forRoot({ load: [authConfig], isGlobal: true }),
     ReviewsModule,
     ProductsModule,
+    ShipmentsModule,
     OrdersModule,
     MypagesModule,
   ],

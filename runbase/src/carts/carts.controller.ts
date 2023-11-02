@@ -48,7 +48,7 @@ export class CartsController {
     @Request() request,
     @Param('id') cartId: number,
     @Body('quantity') quantity: number,
-  ): Promise<Cart> {
+  ) {
     const userId = request.user.id;
     return this.cartsService.updateCartItemQuantity(userId, cartId, quantity);
   }
@@ -58,7 +58,7 @@ export class CartsController {
     @Request() request,
     @Param('id') id: number,
     @Res() res: Response,
-  ): Promise<void> {
+  ) {
     try {
       const userId = request.user.id;
       await this.cartsService.deleteCartItem(userId, id);

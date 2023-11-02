@@ -7,12 +7,15 @@ import { OrderProduct } from 'src/entities/order_products.entity';
 import { Shipment } from 'src/entities/shipment.entity';
 import { OrdersController } from './orders.controller';
 import { OrdersService } from './orders.service';
+import { CartsModule } from 'src/carts/carts.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Order, OrderProduct, Shipment, Cart]),
     AuthModule,
+    CartsModule,
   ],
+
   controllers: [OrdersController],
   providers: [OrdersService],
 })

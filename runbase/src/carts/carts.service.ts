@@ -13,6 +13,7 @@ import { Size } from 'src/entities/sizes.entity';
 import { Color } from 'src/entities/colors.entity';
 import { Image } from 'src/entities/images.entity';
 import { AddCartsDto } from './cartsDto';
+import { Gender } from 'src/entities/genders.entity';
 
 @Injectable()
 export class CartsService {
@@ -23,6 +24,8 @@ export class CartsService {
     private product_sizesRepository: Repository<ProductSize>,
     @InjectRepository(Product)
     private productsRepository: Repository<Product>,
+    @InjectRepository(Gender)
+    private gendersRepository: Repository<Gender>,
     @InjectRepository(Category)
     private categoriesRepository: Repository<Category>,
     @InjectRepository(Size)
@@ -33,7 +36,7 @@ export class CartsService {
     private imagesRepository: Repository<Image>,
   ) {}
 
-  private async getCartsData(userId: number): Promise<Cart[]> {
+  async getCartsData(userId: number): Promise<Cart[]> {
     const carts = await this.cartsRepository
       .createQueryBuilder('cart')
       .select(['cart.id', 'cart.productSizeId', 'cart.quantity'])
@@ -42,9 +45,7 @@ export class CartsService {
     return carts;
   }
 
-  private async getProductSizes(
-    productSizeIds: number[],
-  ): Promise<ProductSize[]> {
+  async getProductSizes(productSizeIds: number[]): Promise<ProductSize[]> {
     return this.product_sizesRepository
       .createQueryBuilder('productSize')
       .select(['productSize.productId', 'productSize.sizeId', 'productSize.id'])
@@ -52,13 +53,15 @@ export class CartsService {
       .getMany();
   }
 
-  private async getProducts(productIds: number[]): Promise<Product[]> {
+  async getProducts(productIds: number[]): Promise<Product[]> {
     return this.productsRepository
       .createQueryBuilder('product')
       .select([
         'product.id',
         'product.name',
         'product.price',
+        'product.genderId',
+        'product.categoryId',
         'product.colorId',
         'product.serialNumber',
       ])
@@ -66,7 +69,7 @@ export class CartsService {
       .getMany();
   }
 
-  private async getColors(colorIds: number[]): Promise<Color[]> {
+  async getColors(colorIds: number[]): Promise<Color[]> {
     return this.colorsRepository
       .createQueryBuilder('color')
       .select(['color.id', 'color.name'])
@@ -74,7 +77,23 @@ export class CartsService {
       .getMany();
   }
 
-  private async getSerialNumbers(productIds: number[]): Promise<string[]> {
+  async getCategories(categoryIds: number[]): Promise<Category[]> {
+    return this.categoriesRepository
+      .createQueryBuilder('category')
+      .select(['category.id', 'category.name'])
+      .whereInIds(categoryIds)
+      .getMany();
+  }
+
+  async getGenders(categoryIds: number[]): Promise<Gender[]> {
+    return this.gendersRepository
+      .createQueryBuilder('gender')
+      .select(['gender.id', 'gender.name'])
+      .whereInIds(categoryIds)
+      .getMany();
+  }
+
+  async getSerialNumbers(productIds: number[]): Promise<string[]> {
     const products = await this.productsRepository
       .createQueryBuilder('product')
       .select(['product.id', 'product.serialNumber'])
@@ -84,7 +103,7 @@ export class CartsService {
     return products.map((product) => product.serialNumber);
   }
 
-  private async getImages(serialNumbers: string[]): Promise<Image[]> {
+  async getImages(serialNumbers: string[]): Promise<Image[]> {
     return this.imagesRepository
       .createQueryBuilder('image')
       .select(['image.id', 'image.colorId', 'image.url'])
@@ -110,6 +129,17 @@ export class CartsService {
       });
 
       const products = await this.getProducts(productIds);
+      // products 배열에서 genderIds와 categoryIds 를 map으로 추출해서 각각 변수에 담은 뒤
+      // gender, category repository에서 각 Id값에 맞는 값들을 추출해낸다.
+      // 그 변수들을 활용해 combined에 적용
+
+      const categoryIds = products.map((product) => product.categoryId);
+
+      const categories = await this.getCategories(categoryIds);
+
+      const genderIds = products.map((product) => product.genderId);
+
+      const genders = await this.getGenders(genderIds);
 
       const colorIds = products.map((product) => product.colorId);
 
@@ -138,6 +168,12 @@ export class CartsService {
 
         const image = images.find((image) => image.colorId === color.id);
 
+        const category = categories.find(
+          (category) => category.id === product.categoryId,
+        );
+
+        const gender = genders.find((gender) => gender.id === product.genderId);
+
         return {
           userId,
           cartId: cart.id,
@@ -149,8 +185,11 @@ export class CartsService {
           productPrice: productPrice,
           productColor: color.name,
           imageUrl: image.url,
+          productCategory: category.name,
+          productGender: gender,
         };
       });
+      combinedData.sort((a, b) => a.cartId - b.cartId);
       const totalPrice = combinedData
         .map((product) => product.productPrice)
         .reduce((acc, cur) => acc + cur, 0);
