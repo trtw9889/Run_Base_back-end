@@ -30,5 +30,6 @@ import { User } from 'src/entities/users.entity';
   ],
   controllers: [MypagesController],
   providers: [MypagesService],
+  exports: [MypagesService],
 })
 export class MypagesModule {}

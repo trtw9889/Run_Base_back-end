@@ -30,4 +30,11 @@ export class OrdersController {
     const userId = req.user.id;
     return this.ordersService.getOrderInfo(userId);
   }
+
+  @UseGuards(AuthGuard)
+  @Get('/paymentComplete')
+  async getPaymentComplete(@Request() req) {
+    const userId = req.user.id;
+    return this.ordersService.getPaymentComplete(userId);
+  }
 }

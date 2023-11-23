@@ -6,10 +6,12 @@ import { OrderProduct } from 'src/entities/order_products.entity';
 import { Shipment } from 'src/entities/shipment.entity';
 import { Repository } from 'typeorm';
 import { CartsService } from 'src/carts/carts.service';
+import { MypagesService } from 'src/mypages/mypages.service';
 
 @Injectable()
 export class OrdersService {
   constructor(
+    private mypage: MypagesService,
     @InjectRepository(Order)
     private orderRepository: Repository<Order>,
     @InjectRepository(OrderProduct)
@@ -101,7 +103,16 @@ export class OrdersService {
   }
 
   async getOrderInfo(userId: number) {
-    const cartList = await this.cartsService.findCartsByUserId(userId);
-    console.log(cartList);
+    return await this.cartsService.findCartsByUserId(userId);
+  }
+
+  async getPaymentComplete(userId: number) {
+    const result = await this.orderRepository
+      .createQueryBuilder('order')
+      .select('MAX(order.Id)', 'maxOrderId')
+      .where('order.userId = :userId', { userId })
+      .getRawOne();
+
+    return this.mypage.getPaymentsDetail(userId, result.maxOrderId);
   }
 }
