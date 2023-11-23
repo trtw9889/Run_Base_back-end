@@ -84,63 +84,7 @@ export class ProductsService {
     return result;
   }
 
-  async getNewProduct(page: number, perPage: number): Promise<Products[]> {
-    const products = await this.getAllProducts(page, perPage);
-
-    const startIndex = (page - 1) * perPage;
-    const endIndex = Math.min(startIndex + perPage, 20);
-    const newProduct = products.slice(startIndex, endIndex);
-
-    return newProduct;
-  }
-
-  async getProductsByClothes(
-    page: number,
-    perPage: number,
-  ): Promise<Products[]> {
-    const products = await this.getAllProducts(page, perPage);
-
-    const clothesProducts = products.filter(
-      (product) => product.categoryId === 2,
-    );
-
-    const startIndex = (page - 1) * perPage;
-    const endIndex = startIndex + perPage;
-    const slicedProduct = clothesProducts.slice(startIndex, endIndex);
-
-    return slicedProduct;
-  }
-
-  async getProductsByShoes(page: number, perPage: number): Promise<Products[]> {
-    const products = await this.getAllProducts(page, perPage);
-
-    const shoesProducts = products.filter(
-      (product) => product.categoryId === 1,
-    );
-
-    const startIndex = (page - 1) * perPage;
-    const endIndex = startIndex + perPage;
-    const slicedProduct = shoesProducts.slice(startIndex, endIndex);
-
-    return slicedProduct;
-  }
-
-  async getProductsByGoods(page: number, perPage: number): Promise<Products[]> {
-    const products = await this.getAllProducts(page, perPage);
-
-    const goodsProducts = products.filter(
-      (product) => product.categoryId === 3,
-    );
-
-    const startIndex = (page - 1) * perPage;
-    const endIndex = startIndex + perPage;
-    const slicedProduct = goodsProducts.slice(startIndex, endIndex);
-
-    return slicedProduct;
-  }
-
-  async sortAndFilterProducts(
-    categoryId: number,
+  async filterProducts(
     page: number,
     perPage: number,
     sorting: string,
@@ -152,14 +96,10 @@ export class ProductsService {
   ): Promise<Products[]> {
     const products = await this.getAllProducts(page, perPage, sorting);
 
-    const categoryProducts = products.filter(
-      (product) => product.categoryId === categoryId,
-    );
-
-    let filteredProducts = categoryProducts;
+    let filteredProducts = products;
 
     if (colors.length > 0 && !isNaN(colors[0])) {
-      filteredProducts = categoryProducts.filter((product) =>
+      filteredProducts = products.filter((product) =>
         colors.includes(product.colorId),
       );
     }
@@ -188,11 +128,113 @@ export class ProductsService {
       );
     }
 
+    return filteredProducts;
+  }
+
+  async getNewProduct(page: number, perPage: number): Promise<Products[]> {
+    const products = await this.getAllProducts(page, perPage);
+
+    const startIndex = (page - 1) * perPage;
+    const endIndex = Math.min(startIndex + perPage, 20);
+    const newProduct = products.slice(startIndex, endIndex);
+
+    return newProduct;
+  }
+
+  async getProductsByShoes(
+    page: number,
+    perPage: number,
+    sorting: string,
+    colors: number[],
+    minPrice: string,
+    maxPrice: string,
+    sizes: number[],
+    gender: number,
+  ): Promise<Products[]> {
+    const filterProduct = await this.filterProducts(
+      page,
+      perPage,
+      sorting,
+      colors,
+      minPrice,
+      maxPrice,
+      sizes,
+      gender,
+    );
+
+    const shoesProducts = filterProduct.filter(
+      (product) => product.categoryId === 1,
+    );
+
     const startIndex = (page - 1) * perPage;
     const endIndex = startIndex + perPage;
-    const sortAndFilterProducts = filteredProducts.slice(startIndex, endIndex);
+    const slicedProduct = shoesProducts.slice(startIndex, endIndex);
 
-    return sortAndFilterProducts;
+    return slicedProduct;
+  }
+
+  async getProductsByClothes(
+    page: number,
+    perPage: number,
+    sorting: string,
+    colors: number[],
+    minPrice: string,
+    maxPrice: string,
+    sizes: number[],
+    gender: number,
+  ): Promise<Products[]> {
+    const filterProduct = await this.filterProducts(
+      page,
+      perPage,
+      sorting,
+      colors,
+      minPrice,
+      maxPrice,
+      sizes,
+      gender,
+    );
+
+    const clothesProducts = filterProduct.filter(
+      (product) => product.categoryId === 2,
+    );
+
+    const startIndex = (page - 1) * perPage;
+    const endIndex = startIndex + perPage;
+    const slicedProduct = clothesProducts.slice(startIndex, endIndex);
+
+    return slicedProduct;
+  }
+
+  async getProductsByGoods(
+    page: number,
+    perPage: number,
+    sorting: string,
+    colors: number[],
+    minPrice: string,
+    maxPrice: string,
+    sizes: number[],
+    gender: number,
+  ): Promise<Products[]> {
+    const filterProduct = await this.filterProducts(
+      page,
+      perPage,
+      sorting,
+      colors,
+      minPrice,
+      maxPrice,
+      sizes,
+      gender,
+    );
+
+    const goodsProducts = filterProduct.filter(
+      (product) => product.categoryId === 3,
+    );
+
+    const startIndex = (page - 1) * perPage;
+    const endIndex = startIndex + perPage;
+    const slicedProduct = goodsProducts.slice(startIndex, endIndex);
+
+    return slicedProduct;
   }
 
   async getProductsById(id: number): Promise<
